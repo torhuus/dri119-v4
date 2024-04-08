@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Button } from "./ui/button";
 import { Token } from "@/actions/auth";
-import { useSearchParams } from "next/navigation";
 import { Ticket } from "@prisma/client";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -56,8 +55,8 @@ const ScrollableFilterBar = ({
   }, [priority, status, search, area]);
 
   return (
-    <div className="flex flex-col gap-4 my-4">
-      <div>
+    <div className="flex flex-col gap-4 my-4 overflow-hidden max-w-sm">
+      <div className="overflow-hidden">
         <div className="my-4">
           <Label>Søk</Label>
           <Input
@@ -66,9 +65,9 @@ const ScrollableFilterBar = ({
             value={search}
           />
         </div>
+        <h3 className="text-lg font-medium mb-2">Prioritet</h3>
         <ScrollArea className="whitespace-nowrap">
           <div>
-            <h3 className="text-lg font-medium mb-2">Prioritet</h3>
             <div className="flex w-max space-x-2">
               <Button
                 variant={priority === "" ? "default" : "outline"}
@@ -103,9 +102,9 @@ const ScrollableFilterBar = ({
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
         <div className="mt-2"></div>
+        <h3 className="text-lg font-medium mb-2">Praksis</h3>
         <ScrollArea className="whitespace-nowrap pb-2">
           <div>
-            <h3 className="text-lg font-medium mb-2">Praksis</h3>
             <div className="flex w-max space-x-2">
               <Button
                 variant={area === "" ? "default" : "outline"}
@@ -147,9 +146,9 @@ const ScrollableFilterBar = ({
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
         <div className="mt-2"></div>
+        <h3 className="text-lg font-medium mb-2">Status</h3>
         <ScrollArea className="whitespace-nowrap pb-2">
           <div>
-            <h3 className="text-lg font-medium mb-2">Status</h3>
             <div className="flex w-max space-x-2">
               <Button
                 variant={status === "" ? "default" : "outline"}
