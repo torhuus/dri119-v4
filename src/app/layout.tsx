@@ -16,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="nb">
-      <head />
+      <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased flex justify-center",
