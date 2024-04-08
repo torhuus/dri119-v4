@@ -27,7 +27,7 @@ export default function AuthenticationBlock() {
   };
 
   return (
-    <div className="mt-20">
+    <div className="mt-20 px-4">
       {exerciseId === "" && (
         <CreateExerciseForm setExerciseId={setExerciseId} />
       )}

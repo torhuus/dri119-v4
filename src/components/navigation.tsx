@@ -10,7 +10,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import RoleSwitcher from "./forms/role-switcher-form";
 import { Role } from "@prisma/client";
-import { other, priority, status } from "@/data/navigation";
+import { priority, status } from "@/data/navigation";
 import path from "path";
 
 const Navigation = ({ token }: { token: Token }) => {
@@ -94,23 +94,6 @@ const MobileLinks = ({ token, setOpen }: { token: Token; setOpen: any }) => {
               <Link
                 key={status.href}
                 onClick={() => setOpen(false)}
-                href={status.href}
-                className={cn(
-                  defaultClass,
-                  pathname + "?" + searchParams === status.href && activeClass
-                )}
-              >
-                <TicketIcon className="h-4 w-4" />
-                {status.title}
-              </Link>
-            );
-          })}
-          <h3 className="font-semibold mt-4">Annet</h3>
-          {other.map((status) => {
-            return (
-              <Link
-                onClick={() => setOpen(false)}
-                key={status.href}
                 href={status.href}
                 className={cn(
                   defaultClass,

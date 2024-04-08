@@ -48,16 +48,3 @@ export const priority: Navigation = [
     protected: true,
   },
 ];
-
-export const other: Navigation = [
-  {
-    title: "Eldre enn 3 dager",
-    href: "/app/tickets?older_than=3",
-    protected: true,
-  },
-  {
-    title: "Nye i dag",
-    href: "/app/tickets?new_today=true",
-    protected: true,
-  },
-];
