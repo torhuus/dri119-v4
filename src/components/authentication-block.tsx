@@ -28,6 +28,7 @@ export default function AuthenticationBlock() {
 
   return (
     <div className="mt-20 px-4">
+      <h2 className="text-2xl font-semibold mb-6 text-center">Servicedesk</h2>
       {exerciseId === "" && (
         <CreateExerciseForm setExerciseId={setExerciseId} />
       )}
@@ -36,7 +37,9 @@ export default function AuthenticationBlock() {
       )}
 
       {exerciseId !== "" && userId !== "" && (
-        <Button onClick={async () => handleSignin()}>Logg inn</Button>
+        <div className="text-center">
+          <Button onClick={async () => handleSignin()}>Logg inn</Button>
+        </div>
       )}
     </div>
   );

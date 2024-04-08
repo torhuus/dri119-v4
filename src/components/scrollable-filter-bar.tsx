@@ -6,6 +6,8 @@ import { Button } from "./ui/button";
 import { Token } from "@/actions/auth";
 import { useSearchParams } from "next/navigation";
 import { Ticket } from "@prisma/client";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 const ScrollableFilterBar = ({
   token,
@@ -56,6 +58,14 @@ const ScrollableFilterBar = ({
   return (
     <div className="flex flex-col gap-4 my-4">
       <div>
+        <div className="my-4">
+          <Label>Søk</Label>
+          <Input
+            placeholder="Søk etter henvendelse"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+          />
+        </div>
         <ScrollArea className="whitespace-nowrap">
           <div>
             <h3 className="text-lg font-medium mb-2">Prioritet</h3>

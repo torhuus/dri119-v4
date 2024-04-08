@@ -297,6 +297,9 @@ export const getTicketById = async (ticketId: string) => {
         id: parseInt(ticketId),
         exerciseId: token.exerciseId,
       },
+      include: {
+        User: true,
+      },
     });
 
     return { data: ticket };
