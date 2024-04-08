@@ -29,7 +29,7 @@ import { sendResendFeedback } from "@/actions/feedback";
 
 const FeedbackForm = () => {
   const [feedbackType, setFeedbackType] = useState("BUG");
-  const [feedbackMessage, setFeedbackMessage] = useState("BUG");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
   const [sending, setSending] = useState(false);
 
   const handleSend = async (e: any) => {
