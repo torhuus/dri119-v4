@@ -261,6 +261,8 @@ export const updateTicket = async (values: any, ticketId: string) => {
         internalNote: values.internalNote,
         area: values.area,
         status: values.status,
+        closedAt: values.status === "CLOSED" ? new Date() : undefined,
+        startedAt: values.status === "IN_PROGRESS" ? new Date() : undefined,
       },
     });
 

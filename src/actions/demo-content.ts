@@ -23,6 +23,7 @@ export const scaffoldDemoContent = async (exerciseId: string) => {
       closedAt: status === "CLOSED" ? getRandomClosedAt(createdAt) : undefined,
       area: area as Area,
       priority: priority as Priority,
+      createdAt: createdAt,
       startedAt:
         status === "CLOSED" || status === "IN_PROGRESS"
           ? getRandomStartedAt(createdAt)

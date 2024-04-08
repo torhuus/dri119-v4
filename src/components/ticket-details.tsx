@@ -62,6 +62,15 @@ export default function TicketDetails({ ticket }: { ticket: any }) {
                 </span>
               </li>
             )}
+            {ticket.startedAt && ticket.closedAt && (
+              <li className="flex items-center justify-between">
+                <span className="text-muted-foreground">Tid brukt</span>
+                <span>
+                  {moment(ticket.closedAt).diff(ticket.startedAt, "hours")}{" "}
+                  timer
+                </span>
+              </li>
+            )}
           </ul>
           <Separator className="my-2" />
           <ul className="grid gap-3">
