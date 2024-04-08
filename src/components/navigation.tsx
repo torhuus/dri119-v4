@@ -3,7 +3,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 // import FeedbackDialog from '@/components/feedback-dialog';
 import { Button } from "@/components/ui/button";
 import { useReducer, useState } from "react";
-import { Home, Menu, TicketIcon, X } from "lucide-react";
+import {
+  Home,
+  Menu,
+  MessageCircleQuestionIcon,
+  TicketIcon,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { Token, signout } from "@/actions/auth";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -70,41 +76,28 @@ const MobileLinks = ({ token, setOpen }: { token: Token; setOpen: any }) => {
       </Link>
       {token.role === "SUPPORT" && (
         <>
-          <h3 className="font-semibold mt-4">Status</h3>
-          {status.map((status) => {
-            return (
-              <Link
-                onClick={() => setOpen(false)}
-                href={status.href}
-                key={status.href}
-                className={cn(
-                  defaultClass,
-                  pathname + "?" + searchParams === status.href && activeClass,
-                  ""
-                )}
-              >
-                <TicketIcon className="h-4 w-4" />
-                {status.title}
-              </Link>
-            );
-          })}
-          <h3 className="font-semibold mt-4">Prioritet</h3>
-          {priority.map((status) => {
-            return (
-              <Link
-                key={status.href}
-                onClick={() => setOpen(false)}
-                href={status.href}
-                className={cn(
-                  defaultClass,
-                  pathname + "?" + searchParams === status.href && activeClass
-                )}
-              >
-                <TicketIcon className="h-4 w-4" />
-                {status.title}
-              </Link>
-            );
-          })}
+          <Link
+            onClick={() => setOpen(false)}
+            href="/app/tickets"
+            className={cn(
+              defaultClass,
+              pathname === "/app/tickets" && activeClass
+            )}
+          >
+            <TicketIcon className="h-4 w-4" />
+            Henvendelser
+          </Link>
+          <Link
+            onClick={() => setOpen(false)}
+            href="/app/feedback"
+            className={cn(
+              defaultClass,
+              pathname === "/app/feedback" && activeClass
+            )}
+          >
+            <MessageCircleQuestionIcon className="h-4 w-4" />
+            Tilbakemelding
+          </Link>
         </>
       )}
       <div className="mt-auto">{/* <RoleSwitcher token={token} /> */}</div>

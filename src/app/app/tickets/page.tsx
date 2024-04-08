@@ -1,6 +1,6 @@
 import { Token, getToken } from "@/actions/auth";
+import ScrollableFilterBar from "@/components/scrollable-filter-bar";
 import TicketList from "@/components/ticket-list";
-import { createPriorityBadge, translateStatus } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -13,17 +13,6 @@ const TicketsPage = async ({ searchParams }: any) => {
 
   return (
     <>
-      <div className="bg-muted mx-[-1rem] mb-4">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-semibold">Henvendelser</h1>
-          <p className="text-lg">
-            {(searchParams.status && translateStatus(searchParams.status)) ||
-              (searchParams.priority &&
-                createPriorityBadge(searchParams.priority).label) ||
-              "Alle"}
-          </p>
-        </div>
-      </div>
       <div>
         <Suspense fallback={<div>Loading...</div>}>
           <TicketList searchParams={searchParams} />

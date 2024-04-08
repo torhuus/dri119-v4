@@ -80,10 +80,10 @@ const StatsCard = ({ label, value }: any) => {
         <CardTitle className="text-sm font-medium capitalize">
           {label.toLocaleLowerCase()}
         </CardTitle>
-        <DollarSign className="h-4 w-4 text-muted-foreground" />
+        {/* <DollarSign className="h-4 w-4 text-muted-foreground" /> */}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-4xl font-bold">{value}</div>
         {/* <p className="text-xs text-muted-foreground">+20.1% from last month</p> */}
       </CardContent>
     </Card>

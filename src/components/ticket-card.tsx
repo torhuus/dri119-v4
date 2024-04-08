@@ -22,11 +22,11 @@ const TicketCard = ({ ticket }: { ticket: any }) => {
       <Card
         className={cn(
           ticket.status === "CLOSED" && "grayscale",
-          "bg-muted relative flex items-center"
+          "relative flex items-center"
         )}
       >
         <div className="px-4 py-3 grow relative overflow-hidden">
-          <div
+          {/* <div
             className={cn(
               ticket.status === "NEW"
                 ? "bg-blue-500"
@@ -35,13 +35,12 @@ const TicketCard = ({ ticket }: { ticket: any }) => {
                 : "bg-yellow-500",
               "h-full w-1 absolute left-0 top-0 overflow-hidden rounded-tl-md rounded-bl-md"
             )}
-          ></div>
+          ></div> */}
           <CardHeader className="p-0 mb-3">
             <Badge className="rounded-md w-fit">{status}</Badge>
             <h2 className="text-lg font-medium">{ticket.title}</h2>
           </CardHeader>
           <div className="flex flex-col gap-2">
-            <p>{ticketContent}</p>
             <small>Oppdatert: {lastUpdated}</small>
           </div>
           <CardFooter className="p-0 mt-4 flex gap-2 items-center">
@@ -51,7 +50,9 @@ const TicketCard = ({ ticket }: { ticket: any }) => {
             <Badge variant="outline" className="rounded-md">
               ID: {ticket.id}
             </Badge>
-            <Badge className="rounded-md bg-slate-600">{ticket.area}</Badge>
+            <Badge variant="outline" className="rounded-md capitalize">
+              {ticket.area.toLowerCase()}
+            </Badge>
           </CardFooter>
         </div>
         <div className="pr-4">
