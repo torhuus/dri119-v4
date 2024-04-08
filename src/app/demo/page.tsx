@@ -1,7 +1,7 @@
 import AuthenticationBlock from "@/components/authentication-block";
 
-const LandingPage = () => {
+const DemoPage = () => {
   return <AuthenticationBlock />;
 };
 
-export default LandingPage;
+export default DemoPage;
