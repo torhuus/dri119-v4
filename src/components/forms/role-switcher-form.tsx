@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import { PopoverTrigger } from "@/components/ui/popover";
-import { Token, changeArea, changeRole } from "@/actions/auth";
+import { Token, changeArea } from "@/actions/auth";
 import { usePathname } from "next/navigation";
-import { groups, roles } from "@/data/roles";
+import { roles } from "@/data/roles";
 import {
   Select,
   SelectContent,
@@ -24,15 +24,11 @@ export default function RoleSwitcher({ token }: { token: Token }) {
         <Label className="mb-2 inline-block">Endre rolle</Label>
       </div>
       <Select
-        onValueChange={(value) =>
-          value === "USER"
-            ? changeRole(value, pathname)
-            : changeArea(value as Area, pathname)
-        }
-        defaultValue={token.role === "USER" ? "USER" : token.activeArea}
+        onValueChange={(value) => changeArea(value as Area, pathname)}
+        defaultValue={token.activeArea}
       >
         <SelectTrigger>
-          <SelectValue placeholder="Velg din rolle..." />
+          <SelectValue placeholder="Velg praksis" />
         </SelectTrigger>
         <SelectContent>
           {roles.map((role) => {

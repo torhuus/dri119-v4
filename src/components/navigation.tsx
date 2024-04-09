@@ -12,12 +12,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Token, signout } from "@/actions/auth";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import RoleSwitcher from "./forms/role-switcher-form";
-import { Role } from "@prisma/client";
-import { priority, status } from "@/data/navigation";
-import path from "path";
 
 const Navigation = ({ token }: { token: Token }) => {
   const [open, setOpen] = useState(false);

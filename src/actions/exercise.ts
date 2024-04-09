@@ -2,7 +2,7 @@
 import prisma from "@/lib/db";
 import { scaffoldDemoContent } from "./demo-content";
 
-export const createExercise = async (name: string, demoContent: boolean) => {
+export const createExercise = async (name: string, demoContent: string) => {
   try {
     const exercise = await prisma.exercise.create({
       data: {
@@ -10,11 +10,12 @@ export const createExercise = async (name: string, demoContent: boolean) => {
       },
     });
 
-    if (exercise && demoContent) {
+    if (exercise && demoContent === "true") {
       const demoContent = await scaffoldDemoContent(exercise.id);
     }
     return { data: exercise };
   } catch (e) {
+    console.log(e);
     return { error: e };
   }
 };

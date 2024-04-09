@@ -24,11 +24,11 @@ export const scaffoldDemoContent = async (exerciseId: string) => {
       area: area as Area,
       priority: priority as Priority,
       createdAt: createdAt,
+      email: "demo@user.no",
       startedAt:
         status === "CLOSED" || status === "IN_PROGRESS"
           ? getRandomStartedAt(createdAt)
           : undefined,
-      userId: demoUser.id,
       exerciseId: exerciseId,
     };
   });
@@ -59,9 +59,9 @@ function getRandomPriority() {
 function getRandomArea() {
   const areas = [
     "SERVICESENTER",
-    "HENDELSESSTYRING",
     "PROBLEMSTYRING",
     "ENDRINGSKONTROLL",
+    "KAPASITET_OG_YTELSESSTYRING",
   ];
   const randomIndex = Math.floor(Math.random() * areas.length);
   return areas[randomIndex];

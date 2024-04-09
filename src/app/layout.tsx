@@ -21,11 +21,11 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased flex justify-center",
+          "max-h-screen bg-background font-sans antialiased flex justify-center",
           fontSans.variable
         )}
       >
-        <div className="grow max-w-lg">
+        <div className="grow">
           {children}
           <Toaster />
         </div>

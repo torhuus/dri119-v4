@@ -1,133 +1,50 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { Token, getToken } from "./auth";
+import { Token, getToken, signout } from "./auth";
 import { Area, Priority, Status } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export const createNewTicket = async (values: any) => {
   const token = (await getToken()) as Token;
 
-  if (token.role === "USER") {
-    try {
-      const ticket = await prisma.ticket.create({
-        data: {
-          title: values.title,
-          content: values.content,
-          priority: values.priority,
-          userId: token.userId,
-          exerciseId: token.exerciseId,
-        },
-      });
-      return { data: ticket };
-    } catch (e) {
-      return { error: e };
-    }
-  } else if (token.role === "SUPPORT") {
-    try {
-      const ticket = await prisma.ticket.create({
-        data: {
-          title: values.title,
-          content: values.content,
-          priority: values.priority,
-          internalNote: values.internalNote,
-          area: values.area,
-          status: values.status,
-          userId: token.userId,
-          exerciseId: token.exerciseId,
-        },
-      });
-      console.log(ticket);
-      return { data: ticket };
-    } catch (e) {
-      return { error: e };
-    }
+  try {
+    const ticket = await prisma.ticket.create({
+      data: {
+        title: values.title,
+        content: values.content,
+        priority: values.priority,
+        internalNote: values.internalNote,
+        area: values.area,
+        status: values.status,
+        exerciseId: token.exerciseId,
+      },
+    });
+    console.log(ticket);
+    return { data: ticket };
+  } catch (e) {
+    return { error: e };
   }
 
   return;
 };
 
-export const getTickets = async (searchParams: any) => {
+export const getTickets = async () => {
   const token = (await getToken()) as Token;
 
-  if (searchParams.priority) {
-    const tickets = await prisma.ticket.findMany({
-      where: {
-        exerciseId: token.exerciseId,
-        priority: searchParams.priority,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      include: {
-        User: true,
-      },
-    });
-    return { data: tickets };
-  } else if (searchParams.status) {
-    const tickets = await prisma.ticket.findMany({
-      where: {
-        exerciseId: token.exerciseId,
-        status: searchParams.status === "" ? undefined : searchParams.status,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      include: {
-        User: true,
-      },
-    });
-    return { data: tickets };
-  } else if (searchParams.older_than) {
-    const tickets = await prisma.ticket.findMany({
-      where: {
-        exerciseId: token.exerciseId,
-        createdAt: {
-          lt: new Date(searchParams.older_than),
-        },
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      include: {
-        User: true,
-      },
-    });
-    return { data: tickets };
-  } else if (searchParams.new_today) {
-    const tickets = await prisma.ticket.findMany({
-      where: {
-        exerciseId: token.exerciseId,
-        createdAt: {
-          gte: new Date(new Date().setHours(0)),
-        },
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      include: {
-        User: true,
-      },
-    });
-    return { data: tickets };
-  } else {
-    const tickets = await prisma.ticket.findMany({
-      where: {
-        exerciseId: token.exerciseId,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      include: {
-        User: true,
-      },
-    });
-
-    return { data: tickets };
+  if (!token) {
+    signout();
   }
 
-  return { data: [] };
+  const tickets = await prisma.ticket.findMany({
+    where: {
+      exerciseId: token.exerciseId,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+  return { data: tickets };
 };
 
 export const updateStatus = async (values: any) => {
@@ -299,9 +216,6 @@ export const getTicketById = async (ticketId: string) => {
         id: parseInt(ticketId),
         exerciseId: token.exerciseId,
       },
-      include: {
-        User: true,
-      },
     });
 
     return { data: ticket };
@@ -326,4 +240,47 @@ export const deleteTicketById = async (formData: FormData) => {
   } catch (e) {
     return { error: e };
   }
+};
+
+export const createNewAnonymousTicket = async (
+  name: string,
+  email: string,
+  priority: Priority,
+  content: string,
+  exerciseId: string
+) => {
+  const newTicket = await prisma.ticket.create({
+    data: {
+      title: name,
+      content,
+      email,
+      priority,
+      exerciseId,
+    },
+  });
+};
+
+export const createNewAuthenticatedTicket = async (
+  name: string,
+  email: string,
+  priority: Priority,
+  content: string,
+  area: Area,
+  status: Status,
+  internalNote: string,
+  exerciseId: string
+) => {
+  const token = (await getToken()) as Token;
+  const newTicket = await prisma.ticket.create({
+    data: {
+      title: name,
+      content,
+      priority,
+      status,
+      area,
+      internalNote,
+      exerciseId,
+      email: email === "" ? token.username : email,
+    },
+  });
 };

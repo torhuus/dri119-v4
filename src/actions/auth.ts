@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import prisma from "@/lib/db";
-import { Area, Exercise, Role, User } from "@prisma/client";
+import { Area, Exercise, User } from "@prisma/client";
 
 dotenv.config();
 
@@ -52,7 +52,6 @@ export type Token = {
   username: string;
   exerciseId: string;
   exerciseName: string;
-  role: string;
   activeArea: string;
 };
 
@@ -63,7 +62,6 @@ export const createToken = async (user: any) => {
       username: user.name,
       exerciseId: user.Exercise.id,
       exerciseName: user.Exercise.name,
-      role: user.role,
       activeArea: "SERVICESENTER" as Area,
     },
     process.env.JWT_SECRET || "defaultKey"
@@ -92,24 +90,24 @@ export const getToken = () => {
   }
 };
 
-export const changeRole = async (role: Role, pathname: string) => {
-  let token = (await getToken()) as Token;
+// export const changeRole = async (pathname: string) => {
+//   let token = (await getToken()) as Token;
 
-  if (!token) {
-    console.error("No token found");
-    return;
-  }
+//   if (!token) {
+//     console.error("No token found");
+//     return;
+//   }
 
-  if (token.role === role) {
-    return;
-  } else {
-    token.role = role;
-    const newToken = await createNewToken(token);
-    cookies().delete("token");
-    cookies().set("token", newToken);
-    revalidatePath(pathname);
-  }
-};
+//   if (token.role === role) {
+//     return;
+//   } else {
+//     token.role = role;
+//     const newToken = await createNewToken(token);
+//     cookies().delete("token");
+//     cookies().set("token", newToken);
+//     revalidatePath(pathname);
+//   }
+// };
 
 const createNewToken = async (token: Token) => {
   const newToken = await jwt.sign(
@@ -131,7 +129,6 @@ export const changeArea = async (area: Area, pathname: string) => {
     return;
   } else {
     token.activeArea = area;
-    token.role = "SUPPORT";
     const newToken = await createNewToken(token);
     cookies().delete("token");
     cookies().set("token", newToken);
@@ -142,4 +139,9 @@ export const changeArea = async (area: Area, pathname: string) => {
 export const signout = () => {
   cookies().delete("token");
   redirect("/");
+};
+
+export const setExerciseCookie = (exerciseId: string) => {
+  cookies().set("exerciseId", exerciseId);
+  return;
 };
