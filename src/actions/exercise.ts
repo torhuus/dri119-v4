@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/lib/db";
 import { scaffoldDemoContent } from "./demo-content";
+import { cookies } from "next/headers";
 
 export const createExercise = async (name: string, demoContent: string) => {
   try {
@@ -13,6 +14,8 @@ export const createExercise = async (name: string, demoContent: string) => {
     if (exercise && demoContent === "true") {
       const demoContent = await scaffoldDemoContent(exercise.id);
     }
+    cookies().delete("token");
+    cookies().set("exerciseId", exercise.id);
     return { data: exercise };
   } catch (e) {
     console.log(e);

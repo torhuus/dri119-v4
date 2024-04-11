@@ -7,7 +7,7 @@ const TicketsPage = async () => {
   const tickets = await getTickets();
   const token = (await getToken()) as Token;
 
-  if (!tickets || tickets.data.length === 0) {
+  if (!tickets.data || tickets.data.length === 0) {
     ("Ingen henvendelser funnet...");
   }
 

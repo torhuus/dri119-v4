@@ -1,5 +1,5 @@
 const ReportsPage = () => {
-    return ("Her kan du hente ut rapporter...")
-}
+  return "";
+};
 
-export default ReportsPage
+export default ReportsPage;

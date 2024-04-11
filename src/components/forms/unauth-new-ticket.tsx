@@ -1,5 +1,5 @@
 "use client";
-import { createNewAnonymousTicket, createNewTicket } from "@/actions/ticket";
+import { createNewAnonymousTicket } from "@/actions/ticket";
 import { Button } from "@/components/catalyst/button";
 import { Field, Label } from "@/components/catalyst/fieldset";
 import { Input } from "@/components/catalyst/input";
@@ -17,6 +17,14 @@ const NewTicketForm = ({ exerciseId }: { exerciseId: string }) => {
   const { toast } = useToast();
 
   const handleSubmit = async () => {
+    if (name === "" || content === "" || email === "") {
+      toast({
+        title: "Nødvendige felter er tomme",
+        description:
+          "Mangler tittel, beskrivelse og/eller epost, sørg at disse er utfylt og prøv igjen",
+      });
+      return;
+    }
     const ticket = await createNewAnonymousTicket(
       name,
       email,

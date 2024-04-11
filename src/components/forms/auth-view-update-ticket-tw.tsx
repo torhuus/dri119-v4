@@ -10,21 +10,17 @@ import { Input } from "@/components/catalyst/input";
 import { Textarea } from "@/components/catalyst/textarea";
 import { cn } from "@/lib/utils";
 import { Area, Priority, Status } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { Select } from "../catalyst/select";
-import moment from "moment";
 
-const NewAuthenticatedTicketForm = ({ exerciseId }: { exerciseId: string }) => {
+const ViewAndUpdateTicket = ({ exerciseId }: { exerciseId: string }) => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [priority, setPriority] = useState<Priority>(Priority.LOW);
   const [content, setContent] = useState<string>("");
   const [status, setStatus] = useState<Status>(Status.NEW);
   const [area, setArea] = useState<Area>(Area.SERVICESENTER);
-  const [createdAt, setCreatedAt] = useState<string>(
-    moment(new Date()).format("yyyy-MM-DDTHH:mm")
-  );
   const [internalNote, setInternalNote] = useState<string>("");
   const { toast } = useToast();
 
@@ -44,7 +40,6 @@ const NewAuthenticatedTicketForm = ({ exerciseId }: { exerciseId: string }) => {
       area as Area,
       status as Status,
       internalNote,
-      new Date(createdAt).toISOString(),
       exerciseId
     );
     setName("");
@@ -52,7 +47,6 @@ const NewAuthenticatedTicketForm = ({ exerciseId }: { exerciseId: string }) => {
     setContent("");
     setPriority("LOW");
     setStatus("NEW");
-    setCreatedAt(moment(new Date()).format("yyyy-MM-DDTHH:mm"));
     setArea(Area.SERVICESENTER);
     setInternalNote("");
 
@@ -77,11 +71,10 @@ const NewAuthenticatedTicketForm = ({ exerciseId }: { exerciseId: string }) => {
       </div>
       <div>
         <Field>
-          <Label>Epost/referanse/kontaktinformasjon</Label>
+          <Label>Epost (ikke nødvendig)</Label>
           <Input
             name="email"
             type="email"
-            required
             placeholder="Epostadresse til innsender"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -153,16 +146,6 @@ const NewAuthenticatedTicketForm = ({ exerciseId }: { exerciseId: string }) => {
         </Field>
       </div>
       <div>
-        <Field className="grow">
-          <Label>Henvendelse opprettet</Label>
-          <Input
-            type="datetime-local"
-            value={createdAt}
-            onChange={(e) => setCreatedAt(e.target.value)}
-          />
-        </Field>
-      </div>
-      <div>
         <Field>
           <Label>Beskrivelse</Label>
           <Textarea
@@ -197,4 +180,4 @@ const NewAuthenticatedTicketForm = ({ exerciseId }: { exerciseId: string }) => {
   );
 };
 
-export default NewAuthenticatedTicketForm;
+export default ViewAndUpdateTicket;

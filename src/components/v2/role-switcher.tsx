@@ -18,6 +18,7 @@ export const RoleSwitcher = ({ token }: { token: Token }) => {
         onChange={(e) => changeArea(e.target.value as Area, pathname)}
         value={token.activeArea}
       >
+        <option value="">Alle</option>
         {Object.keys(Area).map((area) => (
           <option key={area} value={area} className="capitalize">
             {area.replaceAll("_", " ").toLocaleLowerCase()}

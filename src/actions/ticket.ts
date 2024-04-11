@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/db";
 import { Token, getToken, signout } from "./auth";
-import { Area, Priority, Status } from "@prisma/client";
+import { Area, Priority, Status, Ticket } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export const createNewTicket = async (values: any) => {
@@ -162,13 +162,17 @@ export const updateArea = async (values: any) => {
   }
 };
 
-export const updateTicket = async (values: any, ticketId: string) => {
+export const updateTicket = async (
+  values: any,
+  ticketId: number,
+  previousTicket: Ticket
+) => {
   const token = (await getToken()) as Token;
 
   try {
     const ticket = await prisma.ticket.update({
       where: {
-        id: parseInt(ticketId),
+        id: ticketId,
         exerciseId: token.exerciseId,
       },
       data: {
@@ -179,7 +183,11 @@ export const updateTicket = async (values: any, ticketId: string) => {
         area: values.area,
         status: values.status,
         closedAt: values.status === "CLOSED" ? new Date() : undefined,
-        startedAt: values.status === "IN_PROGRESS" ? new Date() : undefined,
+        startedAt: previousTicket.startedAt
+          ? previousTicket.startedAt
+          : previousTicket.status === "NEW" && values.status === "IN_PROGRESS"
+          ? new Date()
+          : undefined,
       },
     });
 
@@ -224,13 +232,13 @@ export const getTicketById = async (ticketId: string) => {
   }
 };
 
-export const deleteTicketById = async (formData: FormData) => {
+export const deleteTicketById = async (ticketId: number) => {
   const token = (await getToken()) as Token;
 
   try {
     await prisma.ticket.delete({
       where: {
-        id: parseInt(formData.get("id") as string),
+        id: ticketId,
         exerciseId: token.exerciseId,
       },
     });
@@ -268,6 +276,7 @@ export const createNewAuthenticatedTicket = async (
   area: Area,
   status: Status,
   internalNote: string,
+  createdAt: string,
   exerciseId: string
 ) => {
   const token = (await getToken()) as Token;
@@ -279,6 +288,7 @@ export const createNewAuthenticatedTicket = async (
       status,
       area,
       internalNote,
+      createdAt: createdAt,
       exerciseId,
       email: email === "" ? token.username : email,
     },

@@ -19,6 +19,7 @@ const CreateOrLoginUserForm = ({
   const [name, setName] = useState<string>("");
   const [selectedUser, setSelectedUser] = useState<string>("");
   const router = useRouter();
+  console.log(existingUsers);
 
   const handleFormSubmit = async () => {
     if (name !== "") {
@@ -33,7 +34,7 @@ const CreateOrLoginUserForm = ({
     } else if (selectedUser !== "") {
       // Use existing exercise
       await signin(selectedUser, exerciseId);
-      router.push("/v2");
+      router.push("/app");
     }
   };
 
@@ -68,10 +69,10 @@ const CreateOrLoginUserForm = ({
               setSelectedUser(e.target.value);
             }}
           >
-            <option value="">Velg en eksisterende øvelse...</option>
+            <option value="">Velg en eksisterende bruker...</option>
             {existingUsers &&
-              existingUsers.length > 0 &&
-              existingUsers.map((user: User) => (
+              existingUsers.data.length > 0 &&
+              existingUsers.data.map((user: User) => (
                 <option className="text-gray-400" key={user.id} value={user.id}>
                   {user.name} - {user.id.slice(0, 8)}... (
                   {getTimeAgo(user.createdAt)})

@@ -17,8 +17,10 @@ const NewTicketPage = () => {
         <Link href="/v2">&larr; Tilbake</Link>
         <Link href="/login">Logg inn &rarr;</Link>
       </header>
-      <Pagetitle backUrl="">Ny henvendelse</Pagetitle>
-      <NewTicketForm exerciseId={exerciseId} />;
+      <div className="px-4">
+        <Pagetitle backUrl="">Ny henvendelse</Pagetitle>
+        <NewTicketForm exerciseId={exerciseId} />
+      </div>
     </>
   );
 };

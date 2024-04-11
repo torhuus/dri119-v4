@@ -117,7 +117,7 @@ const createNewToken = async (token: Token) => {
   return newToken;
 };
 
-export const changeArea = async (area: Area, pathname: string) => {
+export const changeArea = async (area: string, pathname: string) => {
   let token = (await getToken()) as Token;
 
   if (!token) {
@@ -128,7 +128,7 @@ export const changeArea = async (area: Area, pathname: string) => {
   if (token.activeArea === area) {
     return;
   } else {
-    token.activeArea = area;
+    token.activeArea = area === "" ? "" : area;
     const newToken = await createNewToken(token);
     cookies().delete("token");
     cookies().set("token", newToken);
@@ -138,10 +138,12 @@ export const changeArea = async (area: Area, pathname: string) => {
 
 export const signout = () => {
   cookies().delete("token");
+  cookies().delete("exerciseId");
   redirect("/");
 };
 
 export const setExerciseCookie = (exerciseId: string) => {
+  cookies().delete("token");
   cookies().set("exerciseId", exerciseId);
   return;
 };
