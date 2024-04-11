@@ -21,6 +21,8 @@ const CreateOrLoginForm = ({
   const [selectedExerciseId, setSelectedExerciseId] = useState<string>("");
   const router = useRouter();
 
+  console.log("Øvelser", existingExercises);
+
   const handleFormSubmit = async () => {
     if (name !== "") {
       // Create new exercise
