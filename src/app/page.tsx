@@ -1,4 +1,3 @@
-import AuthenticationBlock from "@/components/authentication-block";
 import CreateOrLogin from "@/components/forms/create-or-login";
 
 const LandingPage = () => {
