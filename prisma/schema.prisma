@@ -21,7 +21,6 @@ model User {
   name       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  // tickets    Ticket[]
   Exercise   Exercise @relation(fields: [exerciseId], references: [id])
   exerciseId String
 }
@@ -37,8 +36,6 @@ model Ticket {
   priority     Priority  @default(LOW)
   area         Area      @default(SERVICESENTER)
   status       Status    @default(NEW)
-  // User         User?     @relation(fields: [userId], references: [id])
-  // userId       String?
   email        String?
   internalNote String?
   Exercise     Exercise  @relation(fields: [exerciseId], references: [id])
