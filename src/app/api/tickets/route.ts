@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
             "Content-Type": "application/json",
           },
           status: 201,
-        },
+        }
       );
     }
 
@@ -122,6 +122,5 @@ export async function GET(request: NextRequest) {
 }
 
 // /api/tickets?format=xlsx&fromDate=2022-01-01&toDate=2022-01-31&status=OPEN&priority=HIGH&area=HENDELSESSTYRING
-
-// api route with datetime
+// API Route with datetime
 // /api/tickets?format=xlsx&fromDate=2022-01-01T00:00:00&toDate=2022-01-31T23:59:59&status=OPEN&priority=HIGH&area=HENDELSESSTYRING

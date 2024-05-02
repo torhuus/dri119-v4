@@ -1,6 +1,6 @@
 "use client";
 import { Area, Priority, Status } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Field, Label } from "@/components/catalyst/fieldset";
 import { Input } from "@/components/catalyst/input";
 import { Button } from "@/components/catalyst/button";
@@ -30,7 +30,7 @@ function createApiRequest(filters: any) {
 
   // Create query parameters from non-empty values
   const queryParams = new URLSearchParams(
-    filteredEntries as string[][],
+    filteredEntries as string[][]
   ).toString();
   // Build the complete URL
   return queryParams ? `${baseUrl}?${queryParams}` : baseUrl;
