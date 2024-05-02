@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
             "Content-Type": "application/json",
           },
           status: 201,
-        }
+        },
       );
     }
 
@@ -115,10 +115,9 @@ export async function GET(request: NextRequest) {
     }
   } catch (error) {
     console.error(error);
-    return {
+    return new Response(JSON.stringify({ message: "En feil skjedde" }), {
       status: 500,
-      body: { error: "An error occurred" },
-    };
+    });
   }
 }
 
