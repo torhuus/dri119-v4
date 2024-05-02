@@ -1,12 +1,13 @@
 "use client";
-import { Area, Priority, Status, Ticket } from "@prisma/client";
+import { Area, Priority, Status } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { Field, Label } from "@/components/catalyst/fieldset";
 import { Input } from "@/components/catalyst/input";
-import { Token } from "@/actions/auth";
 import { Button } from "@/components/catalyst/button";
 import { Download } from "lucide-react";
 import { Select } from "@/components/catalyst/select";
+import { Switch, SwitchField } from "./catalyst/switch";
+import { Token } from "@/actions/auth";
 
 type FilterType = {
   priority: string;
@@ -15,26 +16,27 @@ type FilterType = {
   fromDate: string;
   toDate: string;
   format: string;
-  allConent: boolean;
+  allContent: boolean;
 };
 
 function createApiRequest(filters: any) {
   // Base URL of the API
   const baseUrl = "/api/tickets";
 
-  // Filter out empty keys
-  const filteredEntries = Object.entries(filters).filter(
-    ([_, value]) => value !== ""
-  );
+  // Filter out empty keys and ensure values are strings
+  const filteredEntries = Object.entries(filters)
+    .filter(([_, value]) => value !== "")
+    .map(([key, value]) => [key, String(value)]);
 
   // Create query parameters from non-empty values
-  const queryParams = new URLSearchParams(filteredEntries).toString();
-
+  const queryParams = new URLSearchParams(
+    filteredEntries as string[][],
+  ).toString();
   // Build the complete URL
   return queryParams ? `${baseUrl}?${queryParams}` : baseUrl;
 }
 
-const ReportGenerator = () => {
+const ReportGenerator = ({ token }: { token: Token }) => {
   const [filters, setFilters] = useState<FilterType>({
     priority: "",
     status: "",
@@ -42,18 +44,40 @@ const ReportGenerator = () => {
     fromDate: "",
     toDate: "",
     format: "csv",
-    allConent: true,
+    allContent: false,
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleGenerateReport = async () => {
-    console.log("hello");
-    let url = createApiRequest(filters);
-    console.log(url);
+    setLoading(true);
+    let fetchUrl = createApiRequest(filters);
+    let res = await fetch(fetchUrl);
+    let blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = `${token.exerciseName}-tickets.csv`;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    setFilters({
+      priority: "",
+      status: "",
+      area: "",
+      fromDate: "",
+      toDate: "",
+      format: "csv",
+      allContent: false,
+    });
+    setLoading(false);
   };
 
   return (
     <div className="min-w-0 max-w-screen-lg w-full mx-auto my-4">
-      <div className="flex gap-4 grow">
+      <div className="flex gap-4 grow flex-col md:flex-row">
         <Field className="grow">
           <Label>Fra dato</Label>
           <Input
@@ -122,13 +146,35 @@ const ReportGenerator = () => {
           </Select>
         </Field>
       </div>
-      <div className="mt-4">
-        <Button
-          className="flex items-center"
-          onClick={() => handleGenerateReport()}
-        >
-          <Download className="h-4 w-4" /> Last ned CSV rapport
-        </Button>
+      <div className="mt-4 flex flex-col gap-4">
+        <div>
+          <SwitchField className="flex flex-col">
+            <Label className={"font-medium"}>
+              Inkluder beskrivelse og interne notater?
+            </Label>
+            <Switch
+              name="allContent"
+              checked={filters.allContent}
+              onChange={(e: any) =>
+                setFilters({ ...filters, allContent: !filters.allContent })
+              }
+            />
+          </SwitchField>
+        </div>
+        <div>
+          <Button
+            className="flex items-center"
+            onClick={() => handleGenerateReport()}
+          >
+            {loading ? (
+              "Laster..."
+            ) : (
+              <>
+                <Download className="h-4 w-4" /> Last ned CSV rapport
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -44,8 +44,8 @@ export async function GET(request: NextRequest) {
         priority: true,
         area: true,
         email: true,
-        internalNote: allContent ? true : false,
-        content: allContent ? true : false,
+        internalNote: allContent === "true" ? true : false,
+        content: allContent === "true" ? true : false,
       },
     });
 

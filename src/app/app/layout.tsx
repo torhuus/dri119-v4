@@ -48,10 +48,6 @@ export default async function AppLayout({
                 <LineChart className="h-4 w-4" />
                 Rapporter
               </DesktopNavigationLink>
-              <DesktopNavigationLink url="/app/feedback">
-                <MessageCircle className="h-4 w-4" />
-                Tilbakemelding
-              </DesktopNavigationLink>
             </nav>
           </div>
           <div className="mt-auto p-4">
@@ -94,10 +90,6 @@ export default async function AppLayout({
                 <MobileNavigationLink url="/app/reports">
                   <LineChart className="h-6 w-6" />
                   Rapporter
-                </MobileNavigationLink>
-                <MobileNavigationLink url="/app/feedback">
-                  <MessageCircle className="h-6 w-6" />
-                  Tilbakemelding
                 </MobileNavigationLink>
               </nav>
               <div className="flex flex-col gap-4 mt-auto">
