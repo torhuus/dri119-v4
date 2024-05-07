@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    console.log("to/from", toDate, fromDate);
     const tickets = await prisma.ticket.findMany({
       where: {
         exerciseId: token.exerciseId,
@@ -48,6 +49,8 @@ export async function GET(request: NextRequest) {
         content: allContent === "true" ? true : false,
       },
     });
+
+    console.log(tickets);
 
     if (tickets.length < 1) {
       return new Response(
@@ -118,7 +121,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error(error);
     return new Response(JSON.stringify({ message: "En feil skjedde" }), {
-      status: 500,
+      status: 501,
     });
   }
 }
