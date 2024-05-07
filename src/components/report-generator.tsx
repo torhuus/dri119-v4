@@ -59,6 +59,9 @@ const ReportGenerator = ({ token }: { token: Token }) => {
     let fetchUrl = createApiRequest(filters);
     let res = await fetch(fetchUrl);
     if (res.status !== 200) {
+      console.log(res.status);
+      console.log(res.statusText);
+      console.log(res);
       setError(
         "Fant ingen henvendelser med disse kriteriene, prøv igjen med andre valg/tidsrom."
       );

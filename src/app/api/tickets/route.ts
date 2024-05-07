@@ -86,6 +86,8 @@ export async function GET(request: NextRequest) {
         dateNF: 'yyyy-mm-dd"T"HH:MM:SS.', // ISO format
       });
 
+      console.warn("INSIDE CSV route.ts part");
+
       return new Response(csv, {
         status: 200,
         headers: {
