@@ -62,7 +62,7 @@ export const createToken = async (user: any) => {
       username: user.name,
       exerciseId: user.Exercise.id,
       exerciseName: user.Exercise.name,
-      activeArea: "SERVICESENTER" as Area,
+      activeArea: "" as Area,
     },
     process.env.JWT_SECRET || "defaultKey"
   );
@@ -89,25 +89,6 @@ export const getToken = () => {
     redirect("/");
   }
 };
-
-// export const changeRole = async (pathname: string) => {
-//   let token = (await getToken()) as Token;
-
-//   if (!token) {
-//     console.error("No token found");
-//     return;
-//   }
-
-//   if (token.role === role) {
-//     return;
-//   } else {
-//     token.role = role;
-//     const newToken = await createNewToken(token);
-//     cookies().delete("token");
-//     cookies().set("token", newToken);
-//     revalidatePath(pathname);
-//   }
-// };
 
 const createNewToken = async (token: Token) => {
   const newToken = await jwt.sign(

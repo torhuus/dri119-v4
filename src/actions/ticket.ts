@@ -293,4 +293,5 @@ export const createNewAuthenticatedTicket = async (
       email: email === "" ? token.username : email,
     },
   });
+  revalidatePath("/app/tickets");
 };

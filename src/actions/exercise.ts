@@ -2,6 +2,7 @@
 import prisma from "@/lib/db";
 import { scaffoldDemoContent } from "./demo-content";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const createExercise = async (name: string, demoContent: string) => {
   try {
@@ -24,6 +25,7 @@ export const createExercise = async (name: string, demoContent: string) => {
 };
 
 export const getAllExercises = async () => {
+  revalidatePath("/");
   try {
     const exercises = await prisma.exercise.findMany();
     return { data: exercises };

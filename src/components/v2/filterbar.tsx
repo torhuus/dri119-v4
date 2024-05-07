@@ -63,39 +63,30 @@ const Filterbar = ({
   useEffect(() => {
     setFilteredTickets(
       tickets.filter((ticket: Ticket) => {
-        // Check each filter, if it's not empty, apply it to the ticket
         return Object.keys(filters).every((filterKey: string) => {
           if (filters[filterKey as keyof FilterType] !== "") {
-            // Apply filter condition based on filterKey
             if (filterKey === "search") {
-              // Example: filtering by ticket title
               return ticket.title
                 .toLowerCase()
                 .includes(filters[filterKey as keyof FilterType].toLowerCase());
             } else if (filterKey === "priority") {
-              // Example: filtering by ticket priority
               return ticket.priority === filters[filterKey as keyof FilterType];
             } else if (filterKey === "area") {
-              // Example: filtering by ticket area
               return ticket.area === filters[filterKey as keyof FilterType];
             } else if (filterKey === "status") {
-              // Example: filtering by ticket status
               return ticket.status === filters[filterKey as keyof FilterType];
             } else if (filterKey === "fromDate") {
-              // Example: filtering by ticket fromDate
               return (
                 ticket.createdAt >=
                 new Date(filters[filterKey as keyof FilterType])
               );
             } else if (filterKey === "toDate") {
-              // Example: filtering by ticket toDate
               return (
                 ticket.createdAt <=
                 new Date(filters[filterKey as keyof FilterType])
               );
             }
           }
-          // If filter value is empty, skip this filter key
           return true;
         });
       })

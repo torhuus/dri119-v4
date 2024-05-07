@@ -1,6 +1,6 @@
 "use client";
 import { Area, Priority, Status } from "@prisma/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Field, Label } from "@/components/catalyst/fieldset";
 import { Input } from "@/components/catalyst/input";
 import { Button } from "@/components/catalyst/button";
@@ -47,11 +47,24 @@ const ReportGenerator = ({ token }: { token: Token }) => {
     allContent: false,
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setError(null);
+  }, [filters]);
 
   const handleGenerateReport = async () => {
     setLoading(true);
+    setError(null);
     let fetchUrl = createApiRequest(filters);
     let res = await fetch(fetchUrl);
+    if (res.status !== 200) {
+      setError(
+        "Fant ingen henvendelser med disse kriteriene, prøv igjen med andre valg/tidsrom."
+      );
+      setLoading(false);
+      return;
+    }
     let blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -164,6 +177,7 @@ const ReportGenerator = ({ token }: { token: Token }) => {
         <div>
           <Button
             className="flex items-center"
+            disabled={loading || (error !== null && true)}
             onClick={() => handleGenerateReport()}
           >
             {loading ? (
@@ -174,6 +188,9 @@ const ReportGenerator = ({ token }: { token: Token }) => {
               </>
             )}
           </Button>
+          <div className="mt-2">
+            <span className="text-red-600 text-sm">{error}</span>
+          </div>
         </div>
       </div>
     </div>

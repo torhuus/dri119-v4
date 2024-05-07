@@ -19,7 +19,6 @@ const CreateOrLoginUserForm = ({
   const [name, setName] = useState<string>("");
   const [selectedUser, setSelectedUser] = useState<string>("");
   const router = useRouter();
-  console.log(existingUsers);
 
   const handleFormSubmit = async () => {
     if (name !== "") {

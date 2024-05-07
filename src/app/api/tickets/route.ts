@@ -73,7 +73,9 @@ export async function GET(request: NextRequest) {
         : undefined,
     }));
 
-    const worksheet = XLSX.utils.json_to_sheet(formattedTickets);
+    const calculatedTickets = calculateTicketTimes(formattedTickets);
+
+    const worksheet = XLSX.utils.json_to_sheet(calculatedTickets);
 
     if (format === "csv") {
       const csv = XLSX.utils.sheet_to_csv(worksheet, {
@@ -121,6 +123,34 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// /api/tickets?format=xlsx&fromDate=2022-01-01&toDate=2022-01-31&status=OPEN&priority=HIGH&area=HENDELSESSTYRING
-// API Route with datetime
-// /api/tickets?format=xlsx&fromDate=2022-01-01T00:00:00&toDate=2022-01-31T23:59:59&status=OPEN&priority=HIGH&area=HENDELSESSTYRING
+function calculateTicketTimes(tickets: any) {
+  tickets.forEach((ticket: any) => {
+    const createdAt = new Date(ticket.createdAt);
+
+    ticket.timeToStart = "";
+    ticket.timeToComplete = "";
+    ticket.timeSpent = "";
+
+    if (ticket.startedAt) {
+      const startedAt = new Date(ticket.startedAt).getTime();
+      const createdAtTime = new Date(ticket.createdAt).getTime();
+      const diffToStart = startedAt - createdAtTime;
+      ticket.timeToStart = Math.round(diffToStart / 60000);
+    }
+
+    if (ticket.closedAt) {
+      const closedAt = new Date(ticket.closedAt).getTime();
+      const createdAtTime = new Date(ticket.createdAt).getTime();
+      const diffToComplete = closedAt - createdAtTime;
+      ticket.timeToComplete = Math.round(diffToComplete / 60000);
+
+      if (ticket.startedAt) {
+        const startedAt = new Date(ticket.startedAt).getTime();
+        const diffSpent = closedAt - startedAt;
+        ticket.timeSpent = Math.round(diffSpent / 60000);
+      }
+    }
+  });
+
+  return tickets;
+}

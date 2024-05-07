@@ -55,7 +55,6 @@ const NewAuthenticatedTicketForm = ({ exerciseId }: { exerciseId: string }) => {
     setCreatedAt(moment(new Date()).format("yyyy-MM-DDTHH:mm"));
     setArea(Area.SERVICESENTER);
     setInternalNote("");
-
     toast({
       title: "Opprettet!",
       description: "Henvendelsen ble opprettet",
