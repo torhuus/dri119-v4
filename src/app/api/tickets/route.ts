@@ -12,8 +12,6 @@ export async function GET(request: NextRequest) {
   const status = searchParams.get("status");
   const priority = searchParams.get("priority");
   const area = searchParams.get("area");
-  const allContent = searchParams.get("allContent");
-  const format = searchParams.get("format");
 
   if (!token) {
     return new Response("Forbidden", {
@@ -22,7 +20,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    console.log("to/from", toDate, fromDate);
     const tickets = await prisma.ticket.findMany({
       where: {
         exerciseId: token.exerciseId,
@@ -45,12 +42,10 @@ export async function GET(request: NextRequest) {
         priority: true,
         area: true,
         email: true,
-        internalNote: allContent === "true" ? true : false,
-        content: allContent === "true" ? true : false,
+        internalNote: true,
+        content: true,
       },
     });
-
-    console.log(tickets);
 
     if (tickets.length < 1) {
       return new Response(
@@ -78,52 +73,16 @@ export async function GET(request: NextRequest) {
 
     const calculatedTickets = calculateTicketTimes(formattedTickets);
 
-    const worksheet = XLSX.utils.json_to_sheet(calculatedTickets);
-
-    if (format === "csv") {
-      const csv = XLSX.utils.sheet_to_csv(worksheet, {
-        forceQuotes: true,
-        dateNF: 'yyyy-mm-dd"T"HH:MM:SS.', // ISO format
-      });
-
-      console.warn("INSIDE CSV route.ts part");
-
-      return new Response(csv, {
-        status: 200,
-        headers: {
-          "Content-Disposition": `attachment; filename="${token.exerciseName}-csv-export.csv`,
-          "Content-Type": "text/csv",
-        },
-      });
-    } else if (format === "xlsx") {
-      const xlsxWorkbook = XLSX.utils.book_new();
-
-      XLSX.utils.book_append_sheet(xlsxWorkbook, worksheet, "Henvendelser");
-
-      const buf = XLSX.write(xlsxWorkbook, {
-        type: "buffer",
-        bookType: "xlsx",
-      });
-
-      return new Response(buf, {
-        status: 200,
-        headers: {
-          "Content-Disposition": `attachment; filename="${token.exerciseName}-csv-export.csv`,
-          "Content-Type": "application/vnd.ms-excel",
-        },
-      });
-    } else {
-      return new Response(JSON.stringify({ message: "Format ikke valgt" }), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 201,
-      });
-    }
+    return new Response(JSON.stringify(calculatedTickets), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error) {
     console.error(error);
     return new Response(JSON.stringify({ message: "En feil skjedde" }), {
-      status: 501,
+      status: 500,
     });
   }
 }

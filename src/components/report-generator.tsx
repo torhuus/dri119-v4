@@ -6,7 +6,6 @@ import { Input } from "@/components/catalyst/input";
 import { Button } from "@/components/catalyst/button";
 import { Download } from "lucide-react";
 import { Select } from "@/components/catalyst/select";
-import { Switch, SwitchField } from "./catalyst/switch";
 import { Token } from "@/actions/auth";
 
 type FilterType = {
@@ -16,7 +15,6 @@ type FilterType = {
   fromDate: string;
   toDate: string;
   format: string;
-  allContent: boolean;
 };
 
 function createApiRequest(filters: any) {
@@ -44,7 +42,6 @@ const ReportGenerator = ({ token }: { token: Token }) => {
     fromDate: "",
     toDate: "",
     format: "csv",
-    allContent: false,
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,26 +56,16 @@ const ReportGenerator = ({ token }: { token: Token }) => {
     let fetchUrl = createApiRequest(filters);
     let res = await fetch(fetchUrl);
     if (res.status !== 200) {
-      console.log(res.status);
-      console.log(res.statusText);
-      console.log(res);
       setError(
         "Fant ingen henvendelser med disse kriteriene, prøv igjen med andre valg/tidsrom."
       );
       setLoading(false);
       return;
     }
-    let blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = `${token.exerciseName}-tickets.csv`;
+    let data = await res.json();
 
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    handle(data);
+
     setFilters({
       priority: "",
       status: "",
@@ -86,7 +73,6 @@ const ReportGenerator = ({ token }: { token: Token }) => {
       fromDate: "",
       toDate: "",
       format: "csv",
-      allContent: false,
     });
     setLoading(false);
   };
@@ -164,32 +150,12 @@ const ReportGenerator = ({ token }: { token: Token }) => {
       </div>
       <div className="mt-4 flex flex-col gap-4">
         <div>
-          <SwitchField className="flex flex-col">
-            <Label className={"font-medium"}>
-              Inkluder beskrivelse og interne notater?
-            </Label>
-            <Switch
-              name="allContent"
-              checked={filters.allContent}
-              onChange={(e: any) =>
-                setFilters({ ...filters, allContent: !filters.allContent })
-              }
-            />
-          </SwitchField>
-        </div>
-        <div>
           <Button
             className="flex items-center"
             disabled={loading || (error !== null && true)}
             onClick={() => handleGenerateReport()}
           >
-            {loading ? (
-              "Laster..."
-            ) : (
-              <>
-                <Download className="h-4 w-4" /> Last ned CSV rapport
-              </>
-            )}
+            {loading ? "Laster..." : <>Hent CSV rapport</>}
           </Button>
           <div className="mt-2">
             <span className="text-red-600 text-sm">{error}</span>
@@ -201,3 +167,36 @@ const ReportGenerator = ({ token }: { token: Token }) => {
 };
 
 export default ReportGenerator;
+
+const handle = (inputData: any) => {
+  const headers = Object.keys(inputData[0]).join(";");
+
+  const completeData = inputData.map((item: any) => {
+    const completeItem: Record<string, any> = {};
+
+    Object.keys(inputData[0]).forEach((key: any) => {
+      completeItem[key] = item.hasOwnProperty(key) ? item[key] : "";
+    });
+
+    return Object.values(completeItem).join(";");
+  });
+
+  const csv = [headers, ...completeData].join("\n");
+  startCsvDownload(csv);
+};
+
+const startCsvDownload = (csv: string) => {
+  const blob = new Blob([csv], { type: "application/csv" });
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.download = "report.csv";
+  a.href = url;
+  a.style.display = "none";
+  document.body.appendChild(a);
+
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+};
