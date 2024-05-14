@@ -21,7 +21,7 @@ model User {
   name       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  Exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  Exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
   exerciseId String
 }
 
@@ -38,7 +38,7 @@ model Ticket {
   status       Status    @default(NEW)
   email        String?
   internalNote String?
-  Exercise     Exercise  @relation(fields: [exerciseId], references: [id])
+  Exercise     Exercise  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
   exerciseId   String
 }
 
